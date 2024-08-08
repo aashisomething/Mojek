@@ -15,3 +15,33 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 //const analytics = getAnalytics(app);
+
+const axios = require('axios');
+
+const AISENSY_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NWYxZDU3YmVjYjA0MGNmNzY5NWU0MCIsIm5hbWUiOiJVbmNvZGV6IERpZ2l0YWwgU29sdXRpb25zIiwiYXBwTmFtZSI6IkFpU2Vuc3kiLCJjbGllbnRJZCI6IjY2NWYxZDU3YmVjYjA0MGNmNzY5NWUzNyIsImFjdGl2ZVBsYW4iOiJCQVNJQ19NT05USExZIiwiaWF0IjoxNzE3NTA5NDYzfQ.KbrHLq1S6WBm2FCrr9r7ri2sdWVjRXksLKXF22RZn8A';
+const AISENSY_API_URL = 'https://api.aisensy.com/send-message';
+
+async function sendMessage(toNumber, messageContent) {
+    try {
+        const response = await axios.post(AISENSY_API_URL, {
+            apiKey: AISENSY_API_KEY,
+            to: toNumber,
+            message: messageContent,
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (response.data && response.data.success) {
+            console.log('Message sent successfully:', response.data);
+        } else {
+            console.log('Failed to send message:', response.data);
+        }
+    } catch (error) {
+        console.error('Error sending message:', error);
+    }
+}
+
+// Usage
+sendMessage('+1234567890', 'Hello! This is a test message.');
