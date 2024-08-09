@@ -22,7 +22,7 @@ const sendMessage = async () => {
       'X-AiSensy-Project-API-Pwd': AISENSY_API_KEY
     },
     data: {
-      to: '917666264817',
+      to: '917397807939',
       type: 'text',
       recipient_type: 'individual',
       text: { body: 'hello this is a test message' }
