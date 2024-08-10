@@ -6,7 +6,7 @@ const firebaseConfig = require('./firebaseConfig');
 dotenv.config();
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+//const app = initializeApp(firebaseConfig);
 
 // AI Sensy API key and URL
 const AISENSY_API_KEY = process.env.AISENSY_API_KEY;
@@ -39,3 +39,17 @@ const sendMessage = async () => {
 
 
 sendMessage();
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const { handleWebhook } = require('./controllers');
+const app = express();
+
+
+app.use(bodyParser.json()); // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bodies
+
+// Webhook route
+app.post('/webhook', handleWebhook);
+
+app.listen(3000);
