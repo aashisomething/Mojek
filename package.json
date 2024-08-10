@@ -4,7 +4,7 @@
     "dotenv": "^16.4.5",
     "firebase": "^10.12.5",
     "openai": "^4.55.3",
-      "type": "module"
+      
     
     
   }
