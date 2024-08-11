@@ -47,7 +47,7 @@ async function main() {
     
     const messages = [
       { role: 'system', content: 'You are a financial advisor chatbot. Use the following transaction data to answer questions: ' + JSON.stringify(transactionsArray) },
-      { role: 'user', content: 'Can you summarize my recent expenses?' }
+      { role: 'user', content: 'how should i invest in stock market' }
     ];
 
    
