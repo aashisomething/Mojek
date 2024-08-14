@@ -57,13 +57,13 @@ async function processWithGPT(messageContent) {
       { role: 'user', content: messageContent }
     ];
 
-   //gpt
+    //gpt
     const completion = await openai.chat.completions.create({
       messages: messages,
       model: 'gpt-4',
     });
 
- 
+
     return completion.choices[0].message.content;
   } catch (error) {
     console.error('Error processing with GPT:', error);
@@ -108,7 +108,7 @@ const sendMessageToUser = async (phoneNumber, messageContent) => {
 // Webhook handler
 const handleWebhook = async (req, res) => {
   console.log("handle webhook");
-
+  console.log('req.body', req.body)
   try {
     if (req.body && req.body.topic === 'message.created') {
       const message = req.body.data;
