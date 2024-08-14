@@ -111,7 +111,7 @@ const handleWebhook = async (req, res) => {
   console.log('req.body', req.body)
   try {
     if (req.body && req.body.topic === 'message.created') {
-      const message = req.body.data;
+      const message = req.body.data.message;
       const textToProcess = message.message_content.text || '';
 
       console.log('Text to Process:', textToProcess);
