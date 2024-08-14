@@ -110,10 +110,11 @@ const handleWebhook = async (req, res) => {
   console.log("handle webhook");
   console.log('req.body', req.body)
   try {
-    if (req.body && req.body.topic === 'message.created') {
+    if (req.body && req.body.topic === 'message.sender.user') {
       const message = req.body.data.message;
       const textToProcess = message.message_content.text || '';
 
+      console.log('Text to Process:', textToProcess);
       console.log('Text to Process:', textToProcess);
 
       const gptResponse = await processWithGPT(textToProcess);
@@ -126,7 +127,7 @@ const handleWebhook = async (req, res) => {
       console.log('Response sent to user.');
 
     } else {
-      console.log('Webhook handled but topic is not message.created');
+      console.log('Webhook handled but topic is not message.sender.user');
     }
   } catch (error) {
     console.error('Error handling webhook:', error);
