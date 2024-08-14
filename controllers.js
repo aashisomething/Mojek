@@ -1,7 +1,5 @@
 import OpenAI from 'openai';
-
 import dotenv from 'dotenv';
-
 import { get, ref } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
@@ -18,11 +16,16 @@ const openai = new OpenAI({
   apiKey: GPT_API_KEY,
 });
 
-// Initialized Firebase
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 const userId = 'singleUser';
+
+// Global messages array to store chat history
+const messages = [
+  { role: 'system', content: 'You are a financial advisor chatbot. Use the following transaction data to answer questions.' }
+];
 
 // Function to fetch transactions
 async function fetchTransactions() {
@@ -53,20 +56,23 @@ async function processWithGPT(messageContent) {
     const transactions = await fetchTransactions();
     const transactionsArray = Object.values(transactions);
 
-    // Prepare messages for GPT
-    const messages = [
-      { role: 'system', content: 'You are a financial advisor chatbot. Use the following transaction data to answer questions: ' + JSON.stringify(transactionsArray) },
-      { role: 'user', content: messageContent }
-    ];
+    // Update system message with transaction data
+    messages[0].content += ' ' + JSON.stringify(transactionsArray);
 
-    //gpt
+    // Push the user's message to the messages array
+    messages.push({ role: 'user', content: messageContent });
+
+    // GPT API call
     const completion = await openai.chat.completions.create({
       messages: messages,
       model: 'gpt-4',
     });
 
+    // Push the assistant's response to the messages array
+    const gptResponse = completion.choices[0].message.content;
+    messages.push({ role: 'assistant', content: gptResponse });
 
-    return completion.choices[0].message.content;
+    return gptResponse;
   } catch (error) {
     console.error('Error processing with GPT:', error);
     throw error;
@@ -110,24 +116,22 @@ const sendMessageToUser = async (phoneNumber, messageContent) => {
 // Webhook handler
 export const handleWebhook = async (req, res) => {
   console.log("handle webhook");
-  console.log('req.body', req.body)
+  console.log('req.body', req.body);
   try {
     if (req.body && req.body.topic === 'message.sender.user') {
       const message = req.body.data.message;
       const textToProcess = message.message_content.text || '';
 
       console.log('Text to Process:', textToProcess);
-      console.log('Text to Process:', textToProcess);
 
       const gptResponse = await processWithGPT(textToProcess);
       console.log('GPT Response:', gptResponse);
 
       // Send the GPT response back to the user
-      const phoneNumber = message.phone_number; // Ensure phone_number is part of the message object
+      const phoneNumber = message.phone_number; 
       await sendMessageToUser(phoneNumber, gptResponse);
 
       console.log('Response sent to user.');
-
     } else {
       console.log('Webhook handled but topic is not message.sender.user');
     }
