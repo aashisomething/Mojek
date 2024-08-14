@@ -1,10 +1,12 @@
-const OpenAI = require('openai');
-const dotenv = require('dotenv');
-const { get, ref } = require('firebase/database');
-const { initializeApp } = require('firebase/app');
-const { getDatabase } = require('firebase/database');
-const firebaseConfig = require('./firebaseConfig');
-const axios = require('axios');
+import OpenAI from 'openai';
+
+import dotenv from 'dotenv';
+
+import { get, ref } from 'firebase/database';
+import { initializeApp } from 'firebase/app';
+import { getDatabase } from 'firebase/database';
+import firebaseConfig from './firebaseConfig.js';
+import axios from 'axios';
 
 dotenv.config();
 
@@ -106,7 +108,7 @@ const sendMessageToUser = async (phoneNumber, messageContent) => {
 };
 
 // Webhook handler
-const handleWebhook = async (req, res) => {
+export const handleWebhook = async (req, res) => {
   console.log("handle webhook");
   console.log('req.body', req.body)
   try {
@@ -135,5 +137,3 @@ const handleWebhook = async (req, res) => {
 
   res.status(200).send('webhook handled');
 };
-
-module.exports = { handleWebhook };

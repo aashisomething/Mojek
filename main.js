@@ -1,55 +1,18 @@
-const { initializeApp } = require("firebase/app");
-const dotenv = require('dotenv');
-const axios = require('axios');
-const firebaseConfig = require('./firebaseConfig');
+import dotenv from "dotenv"
 
 dotenv.config();
 
-// Initialize Firebase
-//const app = initializeApp(firebaseConfig);
+import express from 'express';
+import bodyParser from 'body-parser';
+import { handleWebhook } from './controllers.js';
 
-// AI Sensy API key and URL
-const AISENSY_API_KEY = process.env.AISENSY_API_KEY;
-const AISENSY_API_URL = process.env.AISENSY_API_URL;
-
-const sendMessage = async () => {
-  const options = {
-    method: 'POST',
-    url: AISENSY_API_URL,
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'X-AiSensy-Project-API-Pwd': AISENSY_API_KEY
-    },
-    data: {
-      to: '917397807939',
-      type: 'text',
-      recipient_type: 'individual',
-      text: { body: 'hello this is a test message' }
-    }
-  };
-
-  try {
-    const { data } = await axios.request(options);
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-
-sendMessage();
-
-const express = require('express');
-const bodyParser = require('body-parser');
-const { handleWebhook } = require('./controllers');
 const app = express();
-
-
-app.use(bodyParser.json()); // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bodies
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Webhook route
 app.post('/webhook', handleWebhook);
 
-app.listen(3000);
+app.listen(3000, () => {
+  console.log('Server is listening on port 3000 🎉');
+});

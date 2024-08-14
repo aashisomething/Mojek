@@ -1,6 +1,5 @@
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 
-// environment variables from .env file
 dotenv.config();
 
 const firebaseConfig = {
@@ -14,4 +13,4 @@ const firebaseConfig = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID
 };
 
-module.exports = firebaseConfig;
+export default firebaseConfig;
